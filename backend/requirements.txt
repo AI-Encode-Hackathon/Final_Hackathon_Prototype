@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+pydantic
+scikit-learn
+scikit-image
+opencv-python
+torchaudio
+pandas
+datetime
+python-multipart
+tqdm
+numpy
