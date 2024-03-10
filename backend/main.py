@@ -12,7 +12,6 @@ import torch
 
 app = FastAPI()
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -55,7 +54,8 @@ def train_model(labels: UploadFile, learning_class: str="Supervised",training_me
                     "accuracy": "Invalid data file type. Must be jpg or wav",
                     "training_method": training_method,
                     "training_time": "n/a",
-                    "k": k
+                    "threshold": 0.7,
+                    "hyperparameter": int(k)
                 }
 
             embeddings.append(emb)
@@ -76,15 +76,15 @@ def train_model(labels: UploadFile, learning_class: str="Supervised",training_me
         X_train, X_test, y_train, y_test = train_test_split(embeddings, classes, test_size=0.2, random_state=42)
 
         match training_method:
-            case "kNearestNeighbours":
+            case "K Nearest Neighbours":
                 model = k_nearest_neighbours.train_model(k, X_train, y_train)
-            case "mlp":
+            case "MLP":
                 k=0
                 model = mlp.train_model(X_train, y_train)
             case "regression":
                 k=0
                 model = linear_regression.train_model(X_train, y_train)
-            case "decision tree":
+            case "Decision Tree":
                 k = 0
                 model = decision_tree.train_model(X_train, y_train)
 
@@ -95,16 +95,13 @@ def train_model(labels: UploadFile, learning_class: str="Supervised",training_me
     if learning_class == "Supervised":
         try:
             accuracy = model.score(X_test, y_test)
+            accuracy = format(accuracy, ".0%")
         except UnboundLocalError:
             accuracy = "Invalid training method"
     else:
         accuracy = "n/a"
     print(accuracy)
-    # # Save model
-    # try:
-    #     pickle.dump(model, open((training_method+".pkl"), 'wb'))
-    # except UnboundLocalError:
-    #     pass
+
 
     return {
         "accuracy": str(accuracy),
