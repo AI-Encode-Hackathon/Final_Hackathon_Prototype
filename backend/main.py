@@ -28,7 +28,7 @@ class Response(BaseModel):
     hyperparameter: int
 
 @app.post("/train_model")
-def train_model(labels: UploadFile, learning_class: str="Supervised",training_method: str="Regression", k: int=7) -> Response:
+def train_model(labels: UploadFile, learning_class: str="Supervised",training_method: str="regression", k: int=7) -> Response:
     start = datetime.now()
 
     print("loading csv")
